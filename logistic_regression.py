@@ -35,7 +35,7 @@ def predict(features, weights):
 def CE(features, weights, labels):
     '''matrics
     features: 100x3 (replace label with bias)
-    weight: 1x3 (use the .T of numpy)
+    weight: 1x3 (use the .T of numpy)**
     label: 100x1
     '''
     prediction = predict(features, weights)
@@ -44,3 +44,29 @@ def CE(features, weights, labels):
     cost_class2 = -(1-labels)*np.log(1 - prediction)
     cost= cost_class1 + cost_class2
     return cost.sum()/n
+
+def update_weights(features, weights, labels, learning_rate):
+    '''matrics
+    features: 100x3 (replace label with bias)
+    weight: 1x3 (use the .T of numpy)**
+    label: 100x1
+    learning_rate: float
+    '''
+    n = len(labels)
+    prediction = predict(features, weights)
+    gradient = np.dot(features.T, prediction -  labels)
+    gradient = gradient/n
+    gradient = gradient*learning_rate
+    weights -= gradient
+    return weights
+
+def train(features, weights, labels, learning_rate, iter):
+    Cost_history = []
+    for i in range(iter):
+        weights = update_weights(features, weights, labels, learning_rate)
+        Cost = CE(features, weights, labels)
+        Cost_history.append(Cost)
+        if (Cost_history[-1] - Cost_history[-2] < 0.001):
+            break
+    return weights, Cost_history
+

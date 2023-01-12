@@ -1,3 +1,8 @@
-import pandas as pd
-df = pd.read_csv("data_classification.csv", header=None)
-print(len(df))
+import numpy as np
+
+a = [1,2,3,4]
+b = [[1,
+    2,
+    3,
+    4,]]
+print(a.T*b)
