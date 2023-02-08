@@ -1,13 +1,26 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
 df = pd.read_csv("data_classification.csv", header=None)
 
+train, test = train_test_split(df, test_size = 0.3, random_state=40)
+
+x_train = df.drop(columns = df.columns[-1])
+y_train = df[df.columns[-1]]
+
+x_test = df.drop(columns = df.columns[-1])
+y_test = df[df.columns[-1]]
+
+
+'''
 x_true = []
 y_true = []
 x_false = []
 y_false = []
+##1x100
+
 for item in df.values:
     if item[-1] == 1:
         x_true.append(item[0])
@@ -16,20 +29,22 @@ for item in df.values:
         x_false.append(item[0])
         y_false.append(item[1])
 
+
 plt.plot(x_true, y_true, 'o', c='blue')
 plt.plot(x_false, y_false, 'o', c='red')
 plt.show()
+'''
 
 def  sigmoid(z):
     return 1.0/(1 + np.exp(-1))
 
 def filter_data(pred):
-    if pred >= 0.5:
+    if pred >= 0.8:
         return 1
     else:
         return 0
 def predict(features, weights):
-    pred = np.doc(features, weights)
+    pred = np.dot(features, weights)
     return sigmoid(pred)
 
 def CE(features, weights, labels):
@@ -54,7 +69,7 @@ def update_weights(features, weights, labels, learning_rate):
     '''
     n = len(labels)
     prediction = predict(features, weights)
-    gradient = np.dot(features.T, prediction -  labels)
+    gradient = np.dot(features, prediction -  labels)
     gradient = gradient/n
     gradient = gradient*learning_rate
     weights -= gradient
@@ -70,3 +85,5 @@ def train(features, weights, labels, learning_rate, iter):
             break
     return weights, Cost_history
 
+
+weights, cost_history = train(features, weights, labels, 0.01, 100)
