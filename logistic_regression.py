@@ -85,18 +85,18 @@ def train(features, weights, labels, learning_rate, iter):
             break
     return weights, Cost_history
 
+def ratio(result, labels):
+    count = 0
+    for i in range(len(result)):
+        if int(result[i][0]) == labels_test[i][0]:
+            count += 1
+    ratio = (count / len(result))*100
+    return ratio
+    
 learning_rate = 0.0001
 iter = 1000
 
 best_weights, Cost_history = train(features_train, weights, labels_train.T, learning_rate, iter)
 prediction = predict(features_test, best_weights)
 result = filter(prediction)
-
-labels_test = labels_test.T
-count = 0
-print(result[0][0] - 1)
-for i in range(len(result)):
-    if int(result[i][0]) == labels_test[i][0]:
-        count += 1
-
-print((count / len(result))*100)
+print(ratio(result, labels_test.T))
